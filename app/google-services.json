@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "359080717331",
+    "project_id": "my-job-link",
+    "storage_bucket": "my-job-link.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:359080717331:android:8cb6e65325fe4efab0a3e6",
+        "android_client_info": {
+          "package_name": "com.example.myjoblink"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCpw7LEbvC6nL5Oinl9E4kjFhCvvqFaf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
