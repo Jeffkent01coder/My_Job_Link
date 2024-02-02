@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.myjoblink.R
 import com.example.myjoblink.dashboard.homefragments.DashboardFragment
+import com.example.myjoblink.dashboard.homefragments.PostJobFragment
 import com.example.myjoblink.dashboard.homefragments.ProfileFragment
 import com.example.myjoblink.databinding.ActivityHomeBinding
 
@@ -22,6 +23,7 @@ class Home : AppCompatActivity() {
         binding.bottomNavigationView.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.icShop -> replaceFragment(DashboardFragment())
+                R.id.icJob -> replaceFragment(PostJobFragment())
                 R.id.icCategories -> replaceFragment(ProfileFragment())
 
                 else -> {
