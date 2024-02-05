@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import com.example.myjoblink.databinding.FragmentPostJobBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 
 
@@ -71,17 +72,17 @@ class PostJobFragment : Fragment() {
         jobPay = binding.jobPay.text.toString().trim()
         jobDescription = binding.jobDescription.text.toString().trim()
 
-        if (jobTitle.isEmpty()){
+        if (jobTitle.isEmpty()) {
             Toast.makeText(requireActivity(), "Enter Job Title", Toast.LENGTH_SHORT).show()
-        } else if (jobLocation.isEmpty()){
+        } else if (jobLocation.isEmpty()) {
             Toast.makeText(requireActivity(), "Enter Job Location", Toast.LENGTH_SHORT).show()
-        }else if (jobNature.isEmpty()){
+        } else if (jobNature.isEmpty()) {
             Toast.makeText(requireActivity(), "Enter Job Nature", Toast.LENGTH_SHORT).show()
-        }else if (jobPay.isEmpty()){
+        } else if (jobPay.isEmpty()) {
             Toast.makeText(requireActivity(), "Enter Job Pay", Toast.LENGTH_SHORT).show()
-        }else if (jobDescription.isEmpty()){
+        } else if (jobDescription.isEmpty()) {
             Toast.makeText(requireActivity(), "Enter Job Description", Toast.LENGTH_SHORT).show()
-        } else{
+        } else {
             uploadJobToStorage()
             binding.jobTitle.text?.clear()
             binding.jobLocation.text?.clear()
@@ -126,6 +127,27 @@ class PostJobFragment : Fragment() {
         hashMap["jobDescription"] = "$jobDescription"
         hashMap["imageUrl"] = "$uploadedImageUrl"
 
+        val ref = FirebaseDatabase.getInstance().getReference("Jobs")
+        ref.child("$timeStamp")
+            .setValue(hashMap)
+            .addOnSuccessListener {
+                progressDialog.dismiss()
+                Toast.makeText(
+                    requireActivity(),
+                    "Uploaded",
+                    Toast.LENGTH_SHORT
+                ).show()
+                jobUri = null
+            }
+            .addOnFailureListener { e ->
+                progressDialog.dismiss()
+                Toast.makeText(
+                    requireActivity(),
+                    "Uploading Job Failed due to ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            }
 
 
     }
