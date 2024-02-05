@@ -1,60 +1,132 @@
 package com.example.myjoblink.dashboard.homefragments
 
+import android.app.ProgressDialog
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.myjoblink.R
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.Fragment
+import com.example.myjoblink.databinding.FragmentPostJobBinding
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.storage.FirebaseStorage
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [PostJobFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class PostJobFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentPostJobBinding? = null
+    private val binding get() = _binding!!
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var progressDialog: ProgressDialog
+    private var jobUri: Uri? = null
+    private val TAG = "JOB ADD TAG"
+
+    private val selectImage = registerForActivityResult(ActivityResultContracts.GetContent()) {
+        jobUri = it
+        binding.selectImage.setImageURI(jobUri)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_post_job, container, false)
+    ): View {
+        _binding = FragmentPostJobBinding.inflate(inflater, container, false)
+
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment PostJobFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            PostJobFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        firebaseAuth = FirebaseAuth.getInstance()
+
+        progressDialog = ProgressDialog(requireActivity())
+        progressDialog.setTitle("Please Wait")
+        progressDialog.setCanceledOnTouchOutside(false)
+
+        binding.selectImage.setOnClickListener {
+            selectImage.launch("image/*")
+        }
+
+        binding.btnPostJob.setOnClickListener {
+            validateData()
+        }
+    }
+
+    private var jobTitle = ""
+    private var jobLocation = ""
+    private var jobNature = ""
+    private var jobPay = ""
+    private var jobDescription = ""
+
+    private fun validateData() {
+        Log.d(TAG, "Validating Data")
+        jobTitle = binding.jobTitle.text.toString().trim()
+        jobLocation = binding.jobLocation.text.toString().trim()
+        jobNature = binding.jobNature.text.toString().trim()
+        jobPay = binding.jobPay.text.toString().trim()
+        jobDescription = binding.jobDescription.text.toString().trim()
+
+        if (jobTitle.isEmpty()){
+            Toast.makeText(requireActivity(), "Enter Job Title", Toast.LENGTH_SHORT).show()
+        } else if (jobLocation.isEmpty()){
+            Toast.makeText(requireActivity(), "Enter Job Location", Toast.LENGTH_SHORT).show()
+        }else if (jobNature.isEmpty()){
+            Toast.makeText(requireActivity(), "Enter Job Nature", Toast.LENGTH_SHORT).show()
+        }else if (jobPay.isEmpty()){
+            Toast.makeText(requireActivity(), "Enter Job Pay", Toast.LENGTH_SHORT).show()
+        }else if (jobDescription.isEmpty()){
+            Toast.makeText(requireActivity(), "Enter Job Description", Toast.LENGTH_SHORT).show()
+        } else{
+            uploadJobToStorage()
+            binding.jobTitle.text?.clear()
+            binding.jobLocation.text?.clear()
+            binding.jobNature.text?.clear()
+            binding.jobPay.text?.clear()
+            binding.jobDescription.text?.clear()
+        }
+
+    }
+
+    private fun uploadJobToStorage() {
+        Log.d(TAG, "Uploading")
+        progressDialog.setMessage("Uploading Job")
+        progressDialog.show()
+
+        val timeStamp = System.currentTimeMillis()
+        val filePathAndName = "job/$timeStamp"
+        val storageReference = FirebaseStorage.getInstance().getReference(filePathAndName)
+        storageReference.putFile(jobUri!!)
+            .addOnSuccessListener { taskSnapShot ->
+                val uriask: Task<Uri> = taskSnapShot.storage.downloadUrl
+                while (!uriask.isSuccessful);
+                val uploadedImageUrl = "${uriask.result}"
+
+                uploadJobInfoToDb(uploadedImageUrl, timeStamp)
+
+                progressDialog.dismiss()
             }
+    }
+
+    private fun uploadJobInfoToDb(uploadedImageUrl: String, timeStamp: Long) {
+        val progressDialog = ProgressDialog(requireActivity())
+        progressDialog.setMessage("Uploading data")
+        val uid = FirebaseAuth.getInstance().uid
+        val hashMap: HashMap<String, Any> = HashMap()
+        hashMap["id"] = "$timeStamp"
+        hashMap["uid"] = "$uid"
+        hashMap["jobTitle"] = "$jobTitle"
+        hashMap["jobLocation"] = "$jobLocation"
+        hashMap["jobNature"] = "$jobNature"
+        hashMap["jobPay"] = "$jobPay"
+        hashMap["jobDescription"] = "$jobDescription"
+        hashMap["imageUrl"] = "$uploadedImageUrl"
+
+
+
     }
 }
