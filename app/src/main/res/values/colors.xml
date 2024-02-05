@@ -10,4 +10,7 @@
 
     <color name="background_tint_light">#FFFFFF</color>
     <color name="background_tint_dark">#000000</color>
+
+    <color name="appThemeColor">#FFFFFF</color>
+
 </resources>
