@@ -82,7 +82,7 @@ class DashboardFragment : Fragment(), JobAdapter.onJobClickListener {
                     val uid = jobSnapshot.child("uid").getValue(String::class.java)
 
                     if (id != null && imageUrl != null && jobDescription != null && jobLocation != null && jobNature != null && jobPay != null && jobTitle != null && uid != null) {
-                        val job = JobData(id, imageUrl, jobDescription, jobLocation, jobNature, jobPay, jobTitle)
+                        val job = JobData(id, imageUrl, jobTitle, jobLocation, jobNature, jobPay, jobDescription)
                         jobArrayList.add(job)
                     }
                 }
