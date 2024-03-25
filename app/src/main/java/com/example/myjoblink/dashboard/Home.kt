@@ -1,5 +1,7 @@
 package com.example.myjoblink.dashboard
 
+import Users
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -17,6 +19,10 @@ class Home : AppCompatActivity() {
         supportActionBar?.hide()
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+       binding.FAB.setOnClickListener {
+           startActivity(Intent(this, Users::class.java))
+       }
 
         replaceFragment(DashboardFragment())
 

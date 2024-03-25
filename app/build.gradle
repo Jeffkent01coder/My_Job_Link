@@ -54,6 +54,10 @@ dependencies {
     //firebase
     implementation platform('com.google.firebase:firebase-bom:32.7.1')
 
+    //messaging
+    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+
+
     //circular image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 

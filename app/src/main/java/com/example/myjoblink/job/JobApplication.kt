@@ -10,6 +10,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.myjoblink.chat.screens.Chat
 import com.example.myjoblink.databinding.ActivityJobApplicationBinding
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth

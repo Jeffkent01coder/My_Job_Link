@@ -219,6 +219,15 @@
             android:backgroundTint="#4CAF50"
             android:text="Send Job Application" />
 
+<!--        <Button-->
+<!--            android:id="@+id/btnChat"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginHorizontal="100dp"-->
+<!--            android:layout_marginVertical="5dp"-->
+<!--            android:backgroundTint="#4CAF50"-->
+<!--            android:text="Chat with Job Poster" />-->
+
 
 
     </TableLayout>
