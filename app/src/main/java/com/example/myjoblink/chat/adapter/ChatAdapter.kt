@@ -16,7 +16,7 @@ class ChatAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(message: Message) {
-            binding.messageText.text = message.text
+            binding.messageText.text = message.messageText
 
             val layoutParams = binding.root.layoutParams as ViewGroup.MarginLayoutParams
 
