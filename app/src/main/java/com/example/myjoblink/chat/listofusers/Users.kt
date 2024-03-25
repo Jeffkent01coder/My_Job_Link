@@ -61,8 +61,11 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
                 for (userSnapshot in snapshot.children) {
                     val user = userSnapshot.getValue(UserData::class.java)
                     user?.let {
-                        if (it.id != currentUserUid) { // Check if the user is not the current user
+                        if (it.uid != currentUserUid) { // Check if the user is not the current user
                             userChatArrayList.add(it) // Add user to the list
+                        } else {
+                            // Handle the current user's information (if needed)
+                            Log.d(TAG, "Current user found: ${it.name}")
                         }
                     }
                 }
@@ -80,10 +83,9 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
         })
     }
 
-
     override fun onUserClick(user: UserData, position: Int) {
         val intent = Intent(this, Chat::class.java)
-        intent.putExtra("id", user.id)
+        intent.putExtra("id", user.uid)
         intent.putExtra("name", user.name)
         startActivity(intent)
     }
