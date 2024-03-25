@@ -9,7 +9,6 @@ import com.example.myjoblink.auth.Login
 import com.example.myjoblink.chat.adapter.ChatAdapter
 import com.example.myjoblink.chat.model.Message
 import com.example.myjoblink.databinding.ActivityChatBinding
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
@@ -24,6 +23,9 @@ class Chat : AppCompatActivity() {
     private val messagesList = mutableListOf<Message>() // Define messagesList here
 
 
+    private var id: String? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityChatBinding.inflate(layoutInflater)
         supportActionBar?.hide()
@@ -31,6 +33,13 @@ class Chat : AppCompatActivity() {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance() // Corrected line
+
+        binding.apply {
+            intent
+            userName.text = intent.getStringExtra("name")
+        }
+
+        id = intent.getStringExtra("id")
 
         if (auth.currentUser == null) {
             // User not logged in, navigate to login screen
@@ -49,14 +58,14 @@ class Chat : AppCompatActivity() {
 
         binding.sendButton.setOnClickListener {
             val messageText = binding.editText.text.toString()
-            sendMessage(messageText)
+            val receiverId = "receiver_id_here" // Implement logic to get receiver ID
+            sendMessage(messageText, receiverId)
         }
 
         listenForMessages()
     }
-    private fun sendMessage(messageText: String) {
+    private fun sendMessage(messageText: String, receiverId: String) {
         val senderId = auth.currentUser!!.uid
-        val receiverId = "" // Implement logic to get receiver ID
 
         val message = Message(messageText, senderId, receiverId)
         database.push().setValue(message)

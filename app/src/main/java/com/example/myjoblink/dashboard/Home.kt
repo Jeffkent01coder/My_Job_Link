@@ -1,6 +1,6 @@
 package com.example.myjoblink.dashboard
 
-import Users
+import com.example.myjoblink.chat.listofusers.Users
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

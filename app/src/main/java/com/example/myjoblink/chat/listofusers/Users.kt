@@ -1,8 +1,10 @@
+package com.example.myjoblink.chat.listofusers
+
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.myjoblink.chat.adapter.UserAdapter
@@ -21,6 +23,7 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
     private lateinit var database: DatabaseReference
     private lateinit var auth: FirebaseAuth
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityUsersBinding.inflate(layoutInflater)
         supportActionBar?.hide()
@@ -28,6 +31,7 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
         setContentView(binding.root)
 
         auth = FirebaseAuth.getInstance()
+
 
         // Initialize RecyclerView
         val layoutManager = LinearLayoutManager(this)
@@ -47,6 +51,8 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
 
     // Function to fetch users from Firebase
     private fun getUsers() {
+        val currentUserUid = auth.currentUser?.uid
+
         val ref = FirebaseDatabase.getInstance().getReference("registeredUser")
 
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -55,7 +61,9 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
                 for (userSnapshot in snapshot.children) {
                     val user = userSnapshot.getValue(UserData::class.java)
                     user?.let {
-                        userChatArrayList.add(it) // Add user to the list
+                        if (it.id != currentUserUid) { // Check if the user is not the current user
+                            userChatArrayList.add(it) // Add user to the list
+                        }
                     }
                 }
                 adapter.notifyDataSetChanged() // Notify adapter of data change
@@ -71,6 +79,7 @@ class Users : AppCompatActivity(), UserAdapter.OnUserClickListener {
             }
         })
     }
+
 
     override fun onUserClick(user: UserData, position: Int) {
         val intent = Intent(this, Chat::class.java)

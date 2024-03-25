@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <corners android:radius="8dp" /><!-- Radius for rounded corners, adjust as needed -->
+    <stroke
+        android:color="#4CAF50"
+        android:width="2dp"
+        />
+</shape>
+
+
+
+<!--//<service-->
+<!--android:name=".MyFirebaseMessagingService">-->
+<!--<intent-filter>-->
+<!--    <action android:name="com.google.firebase.MESSAGING_EVENT" />-->
+<!--</intent-filter>-->
+<!--</service>-->

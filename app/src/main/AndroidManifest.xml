@@ -14,8 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyJobLink"
         tools:targetApi="31">
+
         <activity
-            android:name=".Users"
+            android:name=".chat.listofusers.Users"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
